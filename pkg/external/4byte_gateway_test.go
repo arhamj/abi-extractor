@@ -1,9 +1,15 @@
 package external
 
 import (
+	"go.uber.org/zap"
 	"reflect"
 	"testing"
 )
+
+func init() {
+	logger, _ := zap.NewDevelopment()
+	zap.ReplaceGlobals(logger)
+}
 
 func TestFourByteGateway_GetEventTextSignature(t *testing.T) {
 	type args struct {
