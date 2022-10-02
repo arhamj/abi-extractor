@@ -104,7 +104,7 @@ func (p SolidityParser) GetFunctionSignatures() FunctionSignatures {
 //
 //	PUSH32 <BYTE32>
 //
-//	Note: This is not an exact way to extract event hashes, correct way would be to build the stack step by step and
+//	Note: This is not the correct way to extract event hashes. Correct by building the stack step by step and
 //	analyse it when a LOG instruction is encountered
 func (p SolidityParser) GetEventSignatures() EventSignatures {
 	eventSignatures := make([]string, 0)
