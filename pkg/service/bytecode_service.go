@@ -3,12 +3,15 @@ package service
 import "github.com/arhamj/abi-extractor/pkg/asm"
 
 type BytecodeService struct {
-	solidityParser asm.SolidityParser
+	bytecodeParser asm.BytecodeParser
 	signDecoder    SignDecoderService
 }
 
-func (b BytecodeService) GetBytecode() {
-
+func NewBytecodeService(bytecodeParser asm.BytecodeParser, signDecoder SignDecoderService) BytecodeService {
+	return BytecodeService{
+		bytecodeParser: bytecodeParser,
+		signDecoder:    signDecoder,
+	}
 }
 
 func (b BytecodeService) GetFunctionSigns() {
