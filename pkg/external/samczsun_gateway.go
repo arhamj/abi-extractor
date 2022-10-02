@@ -28,9 +28,9 @@ type SamczsunGateway struct {
 	httpclient *resty.Client
 }
 
-func NewSamczsunGateway(logger *zap.Logger) SamczsunGateway {
+func NewSamczsunGateway() SamczsunGateway {
 	return SamczsunGateway{
-		logger:     logger.With(zap.String("loc", "SamczsunGateway")),
+		logger:     zap.L().With(zap.String("loc", "SamczsunGateway")),
 		httpclient: resty.New(),
 	}
 }
@@ -44,7 +44,7 @@ func (g *SamczsunGateway) GetEventTextSignature(eventSign string) (*SamczsunResp
 		SetResult(&SamczsunResp{}).
 		Get(samczsunBaseUrl + "/api/v1/signatures")
 	if err != nil {
-		g.logger.Error("Error in GetEventTextSignature", zap.String("sign", eventSign), zap.Error(err))
+		g.logger.Error("GetEventTextSignature: error making call to samczsun", zap.String("sign", eventSign), zap.Error(err))
 		return nil, errors.New("error when fetching event text signature")
 	}
 	return resp.Result().(*SamczsunResp), nil
@@ -59,7 +59,7 @@ func (g *SamczsunGateway) GetFunctionTextSignature(functionSign string) (*Samczs
 		SetResult(&SamczsunResp{}).
 		Get(samczsunBaseUrl + "/api/v1/signatures")
 	if err != nil {
-		g.logger.Error("Error in GetFunctionTextSignature", zap.String("sign", functionSign), zap.Error(err))
+		g.logger.Error("GetFunctionTextSignature: error making call to samczsun", zap.String("sign", functionSign), zap.Error(err))
 		return nil, errors.New("error when fetching function text signature")
 	}
 	return resp.Result().(*SamczsunResp), nil

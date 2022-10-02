@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+func init() {
+	logger, _ := zap.NewDevelopment()
+	zap.ReplaceGlobals(logger)
+}
+
 func TestSamczsunGateway_GetEventTextSignature(t *testing.T) {
 	type args struct {
 		eventSign string
@@ -41,8 +46,7 @@ func TestSamczsunGateway_GetEventTextSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logger, _ := zap.NewDevelopment()
-			g := NewSamczsunGateway(logger)
+			g := NewSamczsunGateway()
 			got, err := g.GetEventTextSignature(tt.args.eventSign)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetEventTextSignature() error = %v, wantErr %v", err, tt.wantErr)
@@ -90,8 +94,7 @@ func TestSamczsunGateway_GetFunctionTextSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logger, _ := zap.NewDevelopment()
-			g := NewSamczsunGateway(logger)
+			g := NewSamczsunGateway()
 			got, err := g.GetFunctionTextSignature(tt.args.functionSign)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetFunctionTextSignature() error = %v, wantErr %v", err, tt.wantErr)
