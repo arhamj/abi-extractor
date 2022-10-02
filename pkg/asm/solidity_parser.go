@@ -1,6 +1,7 @@
 package asm
 
 import (
+	"encoding/hex"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"math/big"
@@ -34,14 +35,23 @@ func NewSolidityParser(evmCode []byte) (SolidityParser, error) {
 	return SolidityParser{Disassembler: d}, nil
 }
 
-// GetFunctionSignatures For Solidity we are looking for the following pattern in the Bytecode
+// NewSolidityParserStr accepts bytecode string without leading 0x
+func NewSolidityParserStr(code string) (SolidityParser, error) {
+	script, err := hex.DecodeString(code)
+	if err != nil {
+		return SolidityParser{}, err
+	}
+	return NewSolidityParser(script)
+}
+
+// GetFunctionSigns For Solidity we are looking for the following pattern in the Bytecode
 //
 //	DUP1 PUSH4 <BYTE4> EQ PUSH1 <BYTE1> JUMPI
 //	Ref: https://github.com/ethereum/solidity/blob/242096695fd3e08cc3ca3f0a7d2e06d09b5277bf/libsolidity/codegen/ContractCompiler.cpp#L333
-func (p SolidityParser) GetFunctionSignatures() FunctionSignatures {
+func (p SolidityParser) GetFunctionSigns() FunctionSigns {
 	functionSelectors := make([]string, 0)
 	if len(p.Instructions) == 0 {
-		return NewFunctionSignatures(functionSelectors)
+		return NewFunctionSigns(functionSelectors)
 	}
 	for i := 0; i < len(p.Instructions); i++ {
 		inst := p.Instructions[i]
@@ -97,19 +107,19 @@ func (p SolidityParser) GetFunctionSignatures() FunctionSignatures {
 			functionSelectors = append(functionSelectors, sign)
 		}
 	}
-	return NewFunctionSignatures(functionSelectors)
+	return NewFunctionSigns(functionSelectors)
 }
 
-// GetEventSignatures For Solidity we are looking for the following pattern in the Bytecode
+// GetEventSigns For Solidity we are looking for the following pattern in the Bytecode
 //
 //	PUSH32 <BYTE32>
 //
 //	Note: This is not the correct way to extract event hashes. Correct by building the stack step by step and
-//	analyse it when a LOG instruction is encountered
-func (p SolidityParser) GetEventSignatures() EventSignatures {
+//	analyse it when a LOG instruction is encountered (TODO)
+func (p SolidityParser) GetEventSigns() EventSigns {
 	eventSignatures := make([]string, 0)
 	if len(p.Instructions) == 0 {
-		return NewEventSignatures(eventSignatures)
+		return NewEventSigns(eventSignatures)
 	}
 	var (
 		push32Found bool
@@ -133,5 +143,5 @@ func (p SolidityParser) GetEventSignatures() EventSignatures {
 			push32Found = false
 		}
 	}
-	return NewEventSignatures(eventSignatures)
+	return NewEventSigns(eventSignatures)
 }

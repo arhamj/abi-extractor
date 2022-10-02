@@ -1,25 +1,25 @@
 package asm
 
 type BytecodeParser interface {
-	// GetFunctionSignatures returns a list of signatures prefixed with 0x
-	GetFunctionSignatures() FunctionSignatures
-	// GetEventSignatures returns a list of event signatures prefixed with 0x
-	GetEventSignatures() EventSignatures
+	// GetFunctionSigns returns a list of signatures prefixed with 0x
+	GetFunctionSigns() FunctionSigns
+	// GetEventSigns returns a list of event signatures prefixed with 0x
+	GetEventSigns() EventSigns
 }
 
-type FunctionSignatures struct {
+type FunctionSigns struct {
 	Signatures map[string]bool
 }
 
-func NewFunctionSignatures(signs []string) FunctionSignatures {
+func NewFunctionSigns(signs []string) FunctionSigns {
 	signMap := make(map[string]bool)
 	for _, s := range signs {
 		signMap[s] = true
 	}
-	return FunctionSignatures{Signatures: signMap}
+	return FunctionSigns{Signatures: signMap}
 }
 
-func (f FunctionSignatures) List() []string {
+func (f FunctionSigns) List() []string {
 	res := make([]string, 0)
 	if len(f.Signatures) == 0 {
 		return res
@@ -30,19 +30,19 @@ func (f FunctionSignatures) List() []string {
 	return res
 }
 
-type EventSignatures struct {
+type EventSigns struct {
 	Signatures map[string]bool
 }
 
-func NewEventSignatures(signs []string) EventSignatures {
+func NewEventSigns(signs []string) EventSigns {
 	signMap := make(map[string]bool)
 	for _, s := range signs {
 		signMap[s] = true
 	}
-	return EventSignatures{Signatures: signMap}
+	return EventSigns{Signatures: signMap}
 }
 
-func (e EventSignatures) List() []string {
+func (e EventSigns) List() []string {
 	res := make([]string, 0)
 	if len(e.Signatures) == 0 {
 		return res

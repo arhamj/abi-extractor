@@ -56,13 +56,13 @@ func TestSolidityParser_GetFunctionSignatures(t *testing.T) {
 				Disassembler: tt.fields.Disassembler,
 			}
 			p.PrintDisassembled()
-			got := p.GetFunctionSignatures()
+			got := p.GetFunctionSigns()
 			if len(got.Signatures) != len(tt.wantFunctionSigns) {
-				t.Errorf("GetFunctionSignatures() length does not match wanted = %v, got = %v", len(tt.wantFunctionSigns), len(got.Signatures))
+				t.Errorf("GetFunctionSigns() length does not match wanted = %v, got = %v", len(tt.wantFunctionSigns), len(got.Signatures))
 			}
 			for _, sign := range tt.wantFunctionSigns {
 				if found := got.Signatures[sign]; !found {
-					t.Errorf("GetFunctionSignatures() wanted = %v but not found", sign)
+					t.Errorf("GetFunctionSigns() wanted = %v but not found", sign)
 				}
 			}
 		})
@@ -94,13 +94,13 @@ func TestSolidityParser_GetEventSignatures(t *testing.T) {
 			p := SolidityParser{
 				Disassembler: tt.fields.Disassembler,
 			}
-			got := p.GetEventSignatures()
+			got := p.GetEventSigns()
 			if len(got.Signatures) != len(tt.wantEventSigns) {
-				t.Errorf("GetEventSignatures() length does not match wanted = %v, got = %v", len(tt.wantEventSigns), len(got.Signatures))
+				t.Errorf("GetEventSigns() length does not match wanted = %v, got = %v", len(tt.wantEventSigns), len(got.Signatures))
 			}
 			for _, sign := range tt.wantEventSigns {
 				if found := got.Signatures[sign]; !found {
-					t.Errorf("GetEventSignatures() wanted = %v but not found", sign)
+					t.Errorf("GetEventSigns() wanted = %v but not found", sign)
 				}
 			}
 		})
