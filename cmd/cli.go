@@ -37,6 +37,8 @@ type app struct {
 	logger       *zap.Logger
 	chainGateway external.ChainGateway
 
+	bytecodeParser asm.BytecodeParser
+
 	bytecodeService service.BytecodeService
 
 	bytecode *external.EthCodeResp
@@ -115,7 +117,8 @@ func (a *app) setupApp(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	a.bytecodeService = service.NewBytecodeService(parser, signDecoder)
+	a.bytecodeParser = parser
+	a.bytecodeService = service.NewBytecodeService(signDecoder)
 	a.bytecode = resp
 	return nil
 }
@@ -135,7 +138,7 @@ func (a *app) PrintEventSignatures(c *cli.Context) error {
 		return err
 	}
 
-	res := a.bytecodeService.GetEventSigns()
+	res := a.bytecodeService.GetEventSigns(a.bytecodeParser)
 	fmt.Println("\nEvent signatures (in hex):")
 	for _, k := range res.List() {
 		fmt.Printf("- %s\n", k)
@@ -148,7 +151,7 @@ func (a *app) PrintFunctionSignatures(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	res := a.bytecodeService.GetFunctionSigns()
+	res := a.bytecodeService.GetFunctionSigns(a.bytecodeParser)
 	fmt.Println("\nFunction signatures (in hex):")
 	for _, k := range res.List() {
 		fmt.Printf("- %s\n", k)
@@ -161,7 +164,7 @@ func (a *app) PrintDecodedEventsSignatures(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	res := a.bytecodeService.GetDecodedEventSigns()
+	res := a.bytecodeService.GetDecodedEventSigns(a.bytecodeParser)
 	fmt.Println("\nEvent signatures (<in hex>: <in text>):")
 	for hexSign, textSign := range res {
 		fmt.Printf("- %s: %s\n", hexSign, textSign)
@@ -174,7 +177,7 @@ func (a *app) PrintDecodedFunctionsSignatures(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	res := a.bytecodeService.GetDecodedFunctionSigns()
+	res := a.bytecodeService.GetDecodedFunctionSigns(a.bytecodeParser)
 	fmt.Println("\nFunction signatures (<in hex>: <in text>):")
 	for hexSign, textSign := range res {
 		fmt.Printf("- %s: %s\n", hexSign, textSign)

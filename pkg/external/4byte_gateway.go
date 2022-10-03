@@ -2,8 +2,10 @@ package external
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
+	"time"
 )
 
 const (
@@ -16,7 +18,9 @@ type FourBytesResp struct {
 }
 
 type TextSignResult struct {
-	TextSignature string `json:"text_signature"`
+	CreatedAt     time.Time `json:"created_at"`
+	TextSignature string    `json:"text_signature"`
+	HexSignature  string    `json:"hex_signature"`
 }
 
 type FourByteGateway struct {
@@ -58,6 +62,22 @@ func (g *FourByteGateway) GetFunctionTextSignature(functionSign string) (*FourBy
 		Get(fourBytesBaseUrl + "/api/v1/signatures/")
 	if err != nil {
 		g.logger.Error("GetFunctionTextSignature: error making call to 4byte", zap.String("sign", functionSign), zap.Error(err))
+		return nil, errors.New("error when fetching function text signature")
+	}
+	return resp.Result().(*FourBytesResp), nil
+}
+
+func (g *FourByteGateway) GetFunctionSignatures(pageNo int) (*FourBytesResp, error) {
+	resp, err := g.httpclient.R().
+		SetQueryParams(map[string]string{
+			"page":     fmt.Sprintf("%d", pageNo),
+			"ordering": "created_at",
+		}).
+		SetHeader("Accept", "application/json").
+		SetResult(&FourBytesResp{}).
+		Get(fourBytesBaseUrl + "/api/v1/signatures/")
+	if err != nil {
+		g.logger.Error("GetFunctionSignatures: error making call to 4byte", zap.Int("page", pageNo), zap.Error(err))
 		return nil, errors.New("error when fetching function text signature")
 	}
 	return resp.Result().(*FourBytesResp), nil
