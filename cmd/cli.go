@@ -138,7 +138,7 @@ func (a *app) PrintEventSignatures(c *cli.Context) error {
 	res := a.bytecodeService.GetEventSigns()
 	fmt.Println("\nEvent signatures (in hex):")
 	for _, k := range res.List() {
-		fmt.Printf("\t- %s\n", k)
+		fmt.Printf("- %s\n", k)
 	}
 	return nil
 }
@@ -151,7 +151,7 @@ func (a *app) PrintFunctionSignatures(c *cli.Context) error {
 	res := a.bytecodeService.GetFunctionSigns()
 	fmt.Println("\nFunction signatures (in hex):")
 	for _, k := range res.List() {
-		fmt.Printf("\t- %s\n", k)
+		fmt.Printf("- %s\n", k)
 	}
 	return nil
 }
@@ -164,7 +164,7 @@ func (a *app) PrintDecodedEventsSignatures(c *cli.Context) error {
 	res := a.bytecodeService.GetDecodedEventSigns()
 	fmt.Println("\nEvent signatures (<in hex>: <in text>):")
 	for hexSign, textSign := range res {
-		fmt.Printf("\t- %s: %s\n", hexSign, textSign)
+		fmt.Printf("- %s: %s\n", hexSign, textSign)
 	}
 	return nil
 }
@@ -177,7 +177,7 @@ func (a *app) PrintDecodedFunctionsSignatures(c *cli.Context) error {
 	res := a.bytecodeService.GetDecodedFunctionSigns()
 	fmt.Println("\nFunction signatures (<in hex>: <in text>):")
 	for hexSign, textSign := range res {
-		fmt.Printf("\t- %s: %s\n", hexSign, textSign)
+		fmt.Printf("- %s: %s\n", hexSign, textSign)
 	}
 	return nil
 }
