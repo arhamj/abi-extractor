@@ -59,6 +59,7 @@ func (b BytecodeService) GetDecodedEventSigns() map[string]string {
 	for sign := range signs.Signatures {
 		wg.Add(1)
 		func(sign string) {
+			defer wg.Done()
 			textSign, err := b.signDecoder.GetEventTextSignature(sign)
 			if err != nil || !textSign.Verified {
 				b.logger.Debug("text sign not found for event", zap.String("sign", sign))
@@ -69,6 +70,7 @@ func (b BytecodeService) GetDecodedEventSigns() map[string]string {
 			writeLock.Unlock()
 		}(sign)
 	}
+	wg.Wait()
 	return res
 }
 
