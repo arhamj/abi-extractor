@@ -166,7 +166,7 @@ func (a *app) setupApp(c *cli.Context) error {
 		return err
 	}
 	a.scraperDb = scraperDb
-	a.signDecoder = service.NewSignDecoder(scraperDb, external.NewSamczsunGateway())
+	a.signDecoder = service.NewSignDecoder(external.NewSamczsunGateway(), service.WithScraperDbOpt(scraperDb))
 	a.bytecodeService = service.NewBytecodeService(a.signDecoder)
 	return nil
 }
@@ -178,7 +178,7 @@ func (a *app) setupAppWithoutContract(c *cli.Context) error {
 		return err
 	}
 	a.scraperDb = scraperDb
-	a.signDecoder = service.NewSignDecoder(scraperDb, external.NewSamczsunGateway())
+	a.signDecoder = service.NewSignDecoder(external.NewSamczsunGateway(), service.WithScraperDbOpt(scraperDb))
 	a.bytecodeService = service.NewBytecodeService(a.signDecoder)
 	return nil
 }

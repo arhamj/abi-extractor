@@ -18,7 +18,7 @@ func TestFourByteGateway_GetEventTextSignature(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *FourBytesResp
+		want    *FourByteResp
 		wantErr bool
 	}{
 		{
@@ -26,7 +26,7 @@ func TestFourByteGateway_GetEventTextSignature(t *testing.T) {
 			args: args{
 				eventSign: "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
 			},
-			want: &FourBytesResp{
+			want: &FourByteResp{
 				Count: 1,
 				Results: []TextSignResult{
 					{
@@ -59,7 +59,7 @@ func TestFourByteGateway_GetFunctionTextSignature(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *FourBytesResp
+		want    *FourByteResp
 		wantErr bool
 	}{
 		{
@@ -67,7 +67,7 @@ func TestFourByteGateway_GetFunctionTextSignature(t *testing.T) {
 			args: args{
 				eventSign: "0x8803dbee",
 			},
-			want: &FourBytesResp{
+			want: &FourByteResp{
 				Count: 1,
 				Results: []TextSignResult{
 					{
