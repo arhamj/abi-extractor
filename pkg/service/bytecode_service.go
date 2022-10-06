@@ -7,31 +7,29 @@ import (
 )
 
 type BytecodeService struct {
-	logger         *zap.Logger
-	bytecodeParser asm.BytecodeParser
-	signDecoder    SignDecoderService
+	logger      *zap.Logger
+	signDecoder SignDecoderService
 }
 
-func NewBytecodeService(bytecodeParser asm.BytecodeParser, signDecoder SignDecoderService) BytecodeService {
+func NewBytecodeService(signDecoder SignDecoderService) BytecodeService {
 	return BytecodeService{
-		logger:         zap.L().With(zap.String("loc", "BytecodeService")),
-		bytecodeParser: bytecodeParser,
-		signDecoder:    signDecoder,
+		logger:      zap.L().With(zap.String("loc", "BytecodeService")),
+		signDecoder: signDecoder,
 	}
 }
 
-func (b BytecodeService) GetFunctionSigns() asm.FunctionSigns {
-	return b.bytecodeParser.GetFunctionSigns()
+func (b BytecodeService) GetFunctionSigns(bytecodeParser asm.BytecodeParser) asm.FunctionSigns {
+	return bytecodeParser.GetFunctionSigns()
 }
 
-func (b BytecodeService) GetEventSigns() asm.EventSigns {
-	return b.bytecodeParser.GetEventSigns()
+func (b BytecodeService) GetEventSigns(bytecodeParser asm.BytecodeParser) asm.EventSigns {
+	return bytecodeParser.GetEventSigns()
 }
 
-func (b BytecodeService) GetDecodedFunctionSigns() map[string]string {
+func (b BytecodeService) GetDecodedFunctionSigns(bytecodeParser asm.BytecodeParser) map[string]string {
 	res := make(map[string]string, 0)
 	writeLock := new(sync.Mutex)
-	signs := b.bytecodeParser.GetFunctionSigns()
+	signs := bytecodeParser.GetFunctionSigns()
 	wg := new(sync.WaitGroup)
 	for sign := range signs.Signatures {
 		wg.Add(1)
@@ -51,10 +49,10 @@ func (b BytecodeService) GetDecodedFunctionSigns() map[string]string {
 	return res
 }
 
-func (b BytecodeService) GetDecodedEventSigns() map[string]string {
+func (b BytecodeService) GetDecodedEventSigns(bytecodeParser asm.BytecodeParser) map[string]string {
 	res := make(map[string]string, 0)
 	writeLock := new(sync.Mutex)
-	signs := b.bytecodeParser.GetEventSigns()
+	signs := bytecodeParser.GetEventSigns()
 	wg := new(sync.WaitGroup)
 	for sign := range signs.Signatures {
 		wg.Add(1)
@@ -74,6 +72,8 @@ func (b BytecodeService) GetDecodedEventSigns() map[string]string {
 	return res
 }
 
-func (b BytecodeService) GetABI() {
-
+func (b BytecodeService) GetABI(bytecodeParser asm.BytecodeParser) string {
+	//events := b.GetEventSigns(bytecodeParser)
+	//functions := b.GetDecodedFunctionSigns(bytecodeParser)
+	return ""
 }

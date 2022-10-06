@@ -17,3 +17,5 @@
 
 .idea/
 cli
+db/
+.DS_Store

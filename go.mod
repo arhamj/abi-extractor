@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/mattn/go-sqlite3 v1.14.15
 	github.com/urfave/cli/v2 v2.10.2
 	go.uber.org/zap v1.23.0
 )
