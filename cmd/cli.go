@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/arhamj/abi-extractor/pkg/asm"
 	"github.com/arhamj/abi-extractor/pkg/external"
+	"github.com/arhamj/abi-extractor/pkg/scraper"
 	"github.com/arhamj/abi-extractor/pkg/service"
+	"github.com/arhamj/abi-extractor/pkg/util"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 var (
@@ -90,6 +95,18 @@ func main() {
 				Description: "extract the function signature (in text) from contract bytecode",
 				Flags:       defaultFlags,
 				Action:      a.PrintDecodedFunctionsSignatures,
+			},
+			{
+				Name:        "sync-4byte-events",
+				Aliases:     []string{"s4e"},
+				Description: "scrape 4byte database to local SQLite",
+				Action:      func(c *cli.Context) error { return a.Sync4Byte(c, scraper.Event) },
+			},
+			{
+				Name:        "sync-4byte-function",
+				Aliases:     []string{"s4f"},
+				Description: "scrape 4byte database to local SQLite",
+				Action:      func(c *cli.Context) error { return a.Sync4Byte(c, scraper.Function) },
 			},
 		},
 	}
@@ -181,6 +198,21 @@ func (a *app) PrintDecodedFunctionsSignatures(c *cli.Context) error {
 	fmt.Println("\nFunction signatures (<in hex>: <in text>):")
 	for hexSign, textSign := range res {
 		fmt.Printf("- %s: %s\n", hexSign, textSign)
+	}
+	return nil
+}
+
+func (a *app) Sync4Byte(c *cli.Context, kind scraper.MappingKind) error {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+	util.SetupDevLogger()
+	scraper4Byte, err := scraper.NewFourByteScraper(ctx, external.NewFourByteGateway())
+	if err != nil {
+		return err
+	}
+	err = scraper4Byte.Start(kind)
+	if err != nil {
+		return err
 	}
 	return nil
 }

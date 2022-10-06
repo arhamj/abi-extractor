@@ -82,3 +82,19 @@ func (g *FourByteGateway) GetFunctionSignatures(pageNo int) (*FourBytesResp, err
 	}
 	return resp.Result().(*FourBytesResp), nil
 }
+
+func (g *FourByteGateway) GetEventSignatures(pageNo int) (*FourBytesResp, error) {
+	resp, err := g.httpclient.R().
+		SetQueryParams(map[string]string{
+			"page":     fmt.Sprintf("%d", pageNo),
+			"ordering": "created_at",
+		}).
+		SetHeader("Accept", "application/json").
+		SetResult(&FourBytesResp{}).
+		Get(fourBytesBaseUrl + "/api/v1/event-signatures/")
+	if err != nil {
+		g.logger.Error("GetEventSignatures: error making call to 4byte", zap.Int("page", pageNo), zap.Error(err))
+		return nil, errors.New("error when fetching event text signature")
+	}
+	return resp.Result().(*FourBytesResp), nil
+}
