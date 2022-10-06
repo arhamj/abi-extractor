@@ -117,4 +117,9 @@ func main() {
 
 - If the sync is time-consuming you can use the following sync backup and save it as `/db/scraper.db` in the project
   directory
-    - [backup]()
+    - [backup]() (To be added)
+
+## What to use it for?
+
+- Build a smart contract classifier into EIP standards
+- Indexing the data and providing it as a service
