@@ -81,7 +81,5 @@ func (b BytecodeService) GetDecodedEventSigns(bytecodeParser asm.BytecodeParser)
 }
 
 func (b BytecodeService) GetABI(bytecodeParser asm.BytecodeParser) string {
-	//events := b.GetEventSigns(bytecodeParser)
-	//functions := b.GetDecodedFunctionSigns(bytecodeParser)
-	return ""
+	panic("Implement me!")
 }

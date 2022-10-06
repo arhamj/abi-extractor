@@ -160,6 +160,7 @@ func (a *app) setupApp(c *cli.Context) error {
 		return err
 	}
 	a.bytecodeParser = parser
+	a.bytecode = resp
 	a.logger = zap.L()
 	scraperDb, err := util.NewSQLiteDB("db/scraper.db", scraper.FourByteMigrations)
 	if err != nil {
