@@ -19,7 +19,7 @@ const (
 )
 
 var (
-	migrations = `
+	FourByteMigrations = `
 CREATE TABLE IF NOT EXISTS sign_mapping_fourbyte
 (
     id          INTEGER						PRIMARY KEY,
@@ -52,7 +52,7 @@ type FourByteScraper struct {
 }
 
 func NewFourByteScraper(ctx context.Context, fourByteGateway external.FourByteGateway) (*FourByteScraper, error) {
-	db, err := util.NewSQLiteDB("db/scraper.db", migrations)
+	db, err := util.NewSQLiteDB("db/scraper.db", FourByteMigrations)
 	if err != nil {
 		return nil, err
 	}
