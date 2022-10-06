@@ -19,19 +19,32 @@ type TextSignature struct {
 	Verified bool
 }
 
-func NewSignDecoder(scraperDb *sql.DB, decoderGateway external.SamczsunGateway) SignDecoderService {
-	return SignDecoderService{
-		logger:         zap.L().With(zap.String("loc", "SignDecoderService")),
-		scraperDb:      scraperDb,
-		decoderGateway: decoderGateway,
+type DecoderOpt func(decoder *SignDecoderService)
+
+func WithScraperDbOpt(scraperDb *sql.DB) DecoderOpt {
+	return func(decoder *SignDecoderService) {
+		decoder.scraperDb = scraperDb
 	}
 }
 
+func NewSignDecoder(decoderGateway external.SamczsunGateway, opts ...DecoderOpt) SignDecoderService {
+	svc := SignDecoderService{
+		logger:         zap.L().With(zap.String("loc", "SignDecoderService")),
+		decoderGateway: decoderGateway,
+	}
+	for _, opt := range opts {
+		opt(&svc)
+	}
+	return svc
+}
+
 func (s SignDecoderService) GetEventTextSignature(eventSign string) (*TextSignature, error) {
-	textSignFromDb, err := s.fetchTextSignatureFromDb(scraper.Event, eventSign)
-	if err == nil {
-		s.logger.Debug("GetEventTextSignature: text sign fetched from db", zap.String("sign", eventSign))
-		return textSignFromDb, nil
+	if s.scraperDb != nil {
+		textSignFromDb, err := s.fetchTextSignatureFromDb(scraper.Event, eventSign)
+		if err == nil {
+			s.logger.Debug("GetEventTextSignature: text sign fetched from db", zap.String("sign", eventSign))
+			return textSignFromDb, nil
+		}
 	}
 	resp, err := s.decoderGateway.GetEventTextSignature(eventSign)
 	if err != nil {
@@ -50,10 +63,12 @@ func (s SignDecoderService) GetEventTextSignature(eventSign string) (*TextSignat
 }
 
 func (s SignDecoderService) GetFunctionTextSignature(functionSign string) (*TextSignature, error) {
-	textSignFromDb, err := s.fetchTextSignatureFromDb(scraper.Function, functionSign)
-	if err == nil {
-		s.logger.Debug("GetFunctionTextSignature: text sign fetched from db", zap.String("sign", functionSign))
-		return textSignFromDb, nil
+	if s.scraperDb != nil {
+		textSignFromDb, err := s.fetchTextSignatureFromDb(scraper.Function, functionSign)
+		if err == nil {
+			s.logger.Debug("GetFunctionTextSignature: text sign fetched from db", zap.String("sign", functionSign))
+			return textSignFromDb, nil
+		}
 	}
 	resp, err := s.decoderGateway.GetFunctionTextSignature(functionSign)
 	if err != nil {

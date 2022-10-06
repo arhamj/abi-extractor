@@ -90,7 +90,7 @@ func (s *FourByteScraper) sync(kind MappingKind) error {
 		return err
 	}
 	pageToSync := lastPageSynced + 1
-	var resp *external.FourBytesResp
+	var resp *external.FourByteResp
 	if kind == Function {
 		resp, err = s.gateway.GetFunctionSignatures(pageToSync)
 		if err != nil {
@@ -118,7 +118,7 @@ func (s *FourByteScraper) sync(kind MappingKind) error {
 	return nil
 }
 
-func (s *FourByteScraper) bulkInsertRecords(recordType MappingKind, resp *external.FourBytesResp) error {
+func (s *FourByteScraper) bulkInsertRecords(recordType MappingKind, resp *external.FourByteResp) error {
 	for _, sign := range resp.Results {
 		stmt, err := s.db.Prepare("INSERT OR IGNORE INTO sign_mapping_fourbyte (kind,hex_sign,string_sign,created_at) VALUES (?,?,?,?)")
 		if err != nil {

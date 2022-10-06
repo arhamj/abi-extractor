@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/arhamj/abi-extractor/pkg/asm"
+	"github.com/arhamj/abi-extractor/pkg/external"
 	"go.uber.org/zap"
 	"sync"
 )
@@ -15,6 +16,13 @@ func NewBytecodeService(signDecoder SignDecoderService) BytecodeService {
 	return BytecodeService{
 		logger:      zap.L().With(zap.String("loc", "BytecodeService")),
 		signDecoder: signDecoder,
+	}
+}
+
+func NewDefaultBytecodeService() BytecodeService {
+	return BytecodeService{
+		logger:      zap.L().With(zap.String("loc", "BytecodeService")),
+		signDecoder: NewSignDecoder(external.NewSamczsunGateway()),
 	}
 }
 

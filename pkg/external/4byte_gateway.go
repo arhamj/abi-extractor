@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	fourBytesBaseUrl = "https://www.4byte.directory"
+	fourByteBaseUrl = "https://www.4byte.directory"
 )
 
-type FourBytesResp struct {
+type FourByteResp struct {
 	Count   int              `json:"count"`
 	Results []TextSignResult `json:"results"`
 }
@@ -35,66 +35,66 @@ func NewFourByteGateway() FourByteGateway {
 	}
 }
 
-func (g *FourByteGateway) GetEventTextSignature(eventSign string) (*FourBytesResp, error) {
+func (g *FourByteGateway) GetEventTextSignature(eventSign string) (*FourByteResp, error) {
 	resp, err := g.httpclient.R().
 		SetQueryParams(map[string]string{
 			"hex_signature": eventSign,
 			"sort":          "id",
 		}).
 		SetHeader("Accept", "application/json").
-		SetResult(&FourBytesResp{}).
-		Get(fourBytesBaseUrl + "/api/v1/event-signatures/")
+		SetResult(&FourByteResp{}).
+		Get(fourByteBaseUrl + "/api/v1/event-signatures/")
 	if err != nil {
 		g.logger.Error("GetEventTextSignature: error making call to 4byte", zap.String("sign", eventSign), zap.Error(err))
 		return nil, errors.New("error when fetching event text signature")
 	}
-	return resp.Result().(*FourBytesResp), nil
+	return resp.Result().(*FourByteResp), nil
 }
 
-func (g *FourByteGateway) GetFunctionTextSignature(functionSign string) (*FourBytesResp, error) {
+func (g *FourByteGateway) GetFunctionTextSignature(functionSign string) (*FourByteResp, error) {
 	resp, err := g.httpclient.R().
 		SetQueryParams(map[string]string{
 			"hex_signature": functionSign,
 			"sort":          "id",
 		}).
 		SetHeader("Accept", "application/json").
-		SetResult(&FourBytesResp{}).
-		Get(fourBytesBaseUrl + "/api/v1/signatures/")
+		SetResult(&FourByteResp{}).
+		Get(fourByteBaseUrl + "/api/v1/signatures/")
 	if err != nil {
 		g.logger.Error("GetFunctionTextSignature: error making call to 4byte", zap.String("sign", functionSign), zap.Error(err))
 		return nil, errors.New("error when fetching function text signature")
 	}
-	return resp.Result().(*FourBytesResp), nil
+	return resp.Result().(*FourByteResp), nil
 }
 
-func (g *FourByteGateway) GetFunctionSignatures(pageNo int) (*FourBytesResp, error) {
+func (g *FourByteGateway) GetFunctionSignatures(pageNo int) (*FourByteResp, error) {
 	resp, err := g.httpclient.R().
 		SetQueryParams(map[string]string{
 			"page":     fmt.Sprintf("%d", pageNo),
 			"ordering": "created_at",
 		}).
 		SetHeader("Accept", "application/json").
-		SetResult(&FourBytesResp{}).
-		Get(fourBytesBaseUrl + "/api/v1/signatures/")
+		SetResult(&FourByteResp{}).
+		Get(fourByteBaseUrl + "/api/v1/signatures/")
 	if err != nil {
 		g.logger.Error("GetFunctionSignatures: error making call to 4byte", zap.Int("page", pageNo), zap.Error(err))
 		return nil, errors.New("error when fetching function text signature")
 	}
-	return resp.Result().(*FourBytesResp), nil
+	return resp.Result().(*FourByteResp), nil
 }
 
-func (g *FourByteGateway) GetEventSignatures(pageNo int) (*FourBytesResp, error) {
+func (g *FourByteGateway) GetEventSignatures(pageNo int) (*FourByteResp, error) {
 	resp, err := g.httpclient.R().
 		SetQueryParams(map[string]string{
 			"page":     fmt.Sprintf("%d", pageNo),
 			"ordering": "created_at",
 		}).
 		SetHeader("Accept", "application/json").
-		SetResult(&FourBytesResp{}).
-		Get(fourBytesBaseUrl + "/api/v1/event-signatures/")
+		SetResult(&FourByteResp{}).
+		Get(fourByteBaseUrl + "/api/v1/event-signatures/")
 	if err != nil {
 		g.logger.Error("GetEventSignatures: error making call to 4byte", zap.Int("page", pageNo), zap.Error(err))
 		return nil, errors.New("error when fetching event text signature")
 	}
-	return resp.Result().(*FourBytesResp), nil
+	return resp.Result().(*FourByteResp), nil
 }

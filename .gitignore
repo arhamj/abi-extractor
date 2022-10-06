@@ -19,3 +19,4 @@
 cli
 db/
 .DS_Store
+/abi-extractor
